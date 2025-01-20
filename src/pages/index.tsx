@@ -1,114 +1,103 @@
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Raleway } from "next/font/google";
+import { useState } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const raleway = Raleway({
+  variable: "--font-raleway",
   subsets: ["latin"],
 });
 
 export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const generateImages = () => {
+    const res = [];
+    for (let i = 1; i <= 6; i++) {
+      res.push({
+        id: i,
+        thumbnailSrc: `/assets/${i}-thumbnail.png`,
+        thumbnailAlt: `Thumbnail ${i}`,
+        bgSrc: `/assets/${i}-background.png`,
+        bgAlt: `Background ${i}`,
+        foreground: i === 1 ? `/assets/${i}-foreground-cutout.png` : null,
+      });
+    }
+    return res;
+  };
+  const thumbnails = generateImages();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  return (
+    <div className={`w-screen h-[1200px] bg-white pt-32`}>
+      <div
+        className={`${raleway.variable} font-[family-name:var(--font-raleway)] h-[85%] w-full sm:h-0 bg-[#09101a]`}
+      >
+        {/* Background Images*/}
+        <div className="relative w-full aspect-[3/2] z-0">
+          {/* Modal */}
+          <div className="gradient-box w-full h-full relative z-10"></div>
+          <Image
+            src={thumbnails[activeSlide].bgSrc}
+            alt="Background"
+            fill
+            objectFit="cover"
+          />
+          {/* Foreground */}
+          {thumbnails[activeSlide].foreground && (
+            <div className="absolute sm:-top-[90px] -top-[70px] bottom-0 right-0 sm:w-1/2 w-2/5">
+              <Image
+                src={thumbnails[activeSlide].foreground!}
+                alt="Overflowing Image"
+                fill
+                objectFit="contain"
+              />
+            </div>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="cotainer mx-auto p-10 z-10 absolute top-32 h-full w-full">
+          {/* Content */}
+          <div className="text-white mb-20 sm:mb-40">
+            <h1 className="text-[17px] sm:text-[31px] font-black uppercase leading-none max-w-32 sm:max-w-56 mb-28">
+              more from rico the dog
+            </h1>
+            <h2 className="text-[12px] sm:text-[14px] font-extrabold uppercase w-32 h-12 border-4 rounded-l-[1.5rem] rounded-r-[1.5rem] flex justify-center items-center">
+              <span>rico is back!</span>
+            </h2>
+            <h3 className="text-[49px] sm:text-[35px] font-black uppercase mb-4">
+              ricobot
+            </h3>
+            <p className="text-[14px] md:text-[16px] font-medium max-w-[18rem] sm:max-w-[31rem] mb-8">
+              Charge into a brand-new supersized adventure with RICO across 50
+              exciting and diverse worlds, available now on PS5!
+            </p>
+            <button className="px-6 py-2 bg-white text-[#09101A] text-[14px] sm:text-[16px] font-black uppercase h-16 rounded-l-[2rem] rounded-r-[2rem]">
+              learn more
+            </button>
+          </div>
+          {/* Thumbnails */}
+          <div className="grid grid-cols-3 gap-4 sm:flex items-baseline justify-between sm:w-[80%]">
+            {thumbnails.map((thumbnail, index) => (
+              <div
+                key={thumbnail.id}
+                className={`cursor-pointer ${
+                  activeSlide === index ? "gradient-border" : ""
+                }`}
+                onClick={() => {
+                  setActiveSlide(index);
+                }}
+              >
+                <Image
+                  src={thumbnail.thumbnailSrc}
+                  alt={thumbnail.thumbnailAlt}
+                  width={activeSlide === index ? 180 : 120}
+                  height={activeSlide === index ? 180 : 120}
+                  className="rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
